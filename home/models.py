@@ -23,7 +23,9 @@ class Skills(models.Model):
     skill_name = models.CharField(max_length = 100)
 
 
+
 class Student(models.Model):
+    student_id = models.CharField(max_length= 100 , null = True , blank = True)
     college = models.ForeignKey(College, on_delete= models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     skills = models.ManyToManyField(Skills)
@@ -41,19 +43,28 @@ class Student(models.Model):
 
     def __str__(self) -> str:
         return self.name
-    
 
-    def save(self,) -> None:
-        return super().save()
+    def save(self , *args , **kwargs):
+        if not self.id :
+            last_student_id = 1
+            last_object = Student.objects.last()
+            if last_object:
+                last_student_id = last_object.id
 
-    # slug = models.SlugField()
-    # uid = models.UUIDField()
+            student_id = f"STU-{str(last_student_id).zfill(8)}"
+            self.student_id = student_id
+        else:
+            self.update()
 
-# student =Student.objects.filter(age__gte = 18 , age__lte = 20
-#                                  ).exclude(
-#                                      name__startswith= "B"
-#                                      ).exclude(name__startswith = "C"
-#                                                ).order_by('name')
+            
+        super(Student, self).save(*args, **kwargs)
+
+
+    def update(self , *args , **kwargs):
+        print("UPDATE METHOD CALLED")
+
+        
+
 
 
 names = ['Rachel' , 'Aaron', 'Alexander', 'Daniel']
