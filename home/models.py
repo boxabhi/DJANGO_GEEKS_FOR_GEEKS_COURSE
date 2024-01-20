@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 from django.db import models
+from django.template.defaultfilters import slugify
 
 # Create your models here.
 
@@ -46,27 +47,12 @@ class Student(models.Model):
     def save(self,) -> None:
         return super().save()
 
-    # slug = models.SlugField()
-    # uid = models.UUIDField()
 
-# student =Student.objects.filter(age__gte = 18 , age__lte = 20
-#                                  ).exclude(
-#                                      name__startswith= "B"
-#                                      ).exclude(name__startswith = "C"
-#                                                ).order_by('name')
+class Product(models.Model):
+    product_name = models.CharField(max_length=100)
+    slug = models.SlugField(blank = True)
 
 
-names = ['Rachel' , 'Aaron', 'Alexander', 'Daniel']
-
-# student =Student.objects.filter(age__gte = 18 , age__lte = 20).exclude(name__icontains__in= names).order_by('name')
-
-# YYYY-MM-DD
-
-
-colleges = ['IIT Delhi', 'LPU' , 'AKTU', 'Baccha College']
-
-departments = ['CS' , 'IT' , 'Mechanical', 'Civil']
-
-skills  = ['Python' , 'English', 'Reading', 'Music']
-
-
+    def save(self, *args, **kwargs) -> None:
+        self.slug = slugify(f"{self.product_name}")
+        super(Product, self).save(*args, **kwargs)
