@@ -1,0 +1,63 @@
+{% extends "base.html"%}
+
+
+{% block start %}
+
+<div class="container p-4">
+{% include  "image.html" %}
+
+
+
+    <h1>This HTML page is returned by Django. :) 😁</h1>
+    <p>Django is really nice. 🚀🚀</p>
+
+    <h2>Your Lucky number is - <button class="btn btn-danger">{{lucky_number}}</button></h2>
+
+
+    <ol>
+        {% for vegetable in vegetables  %}
+        <li>{{vegetable}}</li>
+        {% endfor %}
+    </ol>
+
+    <hr>
+
+    {% if person_age >= 18 %}
+    <h1>You can vote</h1>
+    {% else %}
+    <h1>You cannot vote.</h1>
+
+    {% endif %}
+
+    <h3>Cities Information</h3>
+
+    <p> S. no | Name | Population | Country </p>
+    {% for city in cities %}
+
+    <p> {{forloop.counter}} | {{city.name}} | {{city.population}}  | {{city.country}} 
+        
+        {% if city.country == "India" %}  
+        👏🏻
+        {% elif city.country == "Japan" %}
+        🎎
+        {% elif city.country == "USA" %}
+        🤑
+        {% else %}
+        ❌
+        {% endif %}
+    
+    </p>
+
+    {% endfor %}
+
+
+   
+
+    <hr>
+    <a href="{% url 'contact'%}"> Contact </a> | 
+    <a href="{% url 'about'%}"> About </a>
+</p>
+
+</div>
+
+{% endblock %}

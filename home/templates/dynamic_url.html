@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django | Dynamic URL</title>
+</head>
+<body>
+    <h1 style="color: red;">This HTML page is returned by Django.  😁</h1>
+    {{name}}
+    
+    <p style="font-weight: bold;">Dynamic URL : {{id}}</p>
+
+    <p>
+
+        <a href="{% url 'index' %}"> Home </a> | 
+        <a href="{% url 'about'%}"> About </a>
+    
+      
+    </p>
+</body>
+</html>

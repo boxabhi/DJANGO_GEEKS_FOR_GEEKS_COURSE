@@ -1,0 +1,19 @@
+{% extends "base.html"%}
+
+{% block start %}
+{% include  "image.html" %}
+
+    <h1>This HTML page is returned by Django.  😁</h1>
+    <p>Django is really nice. 🚀🚀</p>
+    <p>Contact Page 📞📞📞.</p>
+
+    <p>
+
+        <a href="{% url 'index' %}"> Home </a> | 
+        <a href="{% url 'about'%}"> About </a>
+    
+      
+    </p>
+
+
+    {% endblock %}
