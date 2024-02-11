@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 from django.db import models
+from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
 
 # Create your models here.
@@ -44,6 +45,11 @@ class Skills(BaseModel):
     created_at = models.DateTimeField(auto_now = True)
     update_at = models.DateTimeField(auto_now_add = True)
 
+
+class StudentManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(is_deleted = False)
+
 class Student(BaseModel):
     college = models.ForeignKey(College, on_delete= models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -59,6 +65,10 @@ class Student(BaseModel):
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now = True)
     update_at = models.DateTimeField(auto_now_add = True)
+    is_deleted = models.BooleanField(default = False)
+
+    objects = StudentManager()
+    admin_objects = models.Manager()
 
     def __str__(self) -> str:
         return self.name
@@ -71,9 +81,12 @@ class Student(BaseModel):
 
 class Product(BaseModel):
     product_name = models.CharField(max_length=100)
+    description = models.TextField(null = True , blank = True)
+    quantity = models.IntegerField()
     slug = models.SlugField(blank = True)
     created_at = models.DateTimeField(auto_now = True)
     update_at = models.DateTimeField(auto_now_add = True)
+    file = models.FileField(upload_to="product/files")
 
     def save(self, *args, **kwargs) -> None:
         self.slug = slugify(f"{self.product_name}")
@@ -82,3 +95,16 @@ class Product(BaseModel):
 
     class Meta:
         db_table = "product_table"
+
+
+
+class Contact(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    gender = models.CharField(max_length=100, choices = (
+        ("Male" , "Male"),
+        ("Female", "Female")) , default="Male" )
+    phone_number = models.CharField(max_length = 10, null = True , blank = True)
+    comment = models.CharField(max_length=100000)
+    file = models.FileField(upload_to="files", null = True , blank=True)
+

@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from django.views import View
 import random
+from home.forms import ContactForm
+from home.models import Contact, Product
+from django.contrib import messages
 
 
 
@@ -26,8 +29,59 @@ def about(request):
     return render(request, 'about.html')
 
 def contact(request):
-    return render(request, 'contact.html')
 
+    if request.method == "POST":
+        form = ContactForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('/contact/')
+
+
+    form = ContactForm()
+    context = {'form' : form}
+    return render(request, 'contact.html' , context)
+
+
+
+def checkEmptyorNot(value):
+    return value is None or value is ''
+
+def request_product(request):
+
+    if request.method == "POST":
+        product_name = request.POST.get('product_name')
+        description = request.POST.get('remarks')
+        quantity = request.POST.get('quantity')
+        file = request.FILES['file']
+
+        if checkEmptyorNot(product_name):
+            messages.warning(request, "Product name cannot be null")
+            return redirect('/request-product/')  
+
+        if checkEmptyorNot(description):
+            messages.warning(request, "description  cannot be null")
+            return redirect('/request-product/')  
+
+
+        if int(quantity) > 50 or int(quantity) <= 0:
+            messages.warning(request, "Quantity cannot exceed more than 50 or less than 0")
+            return redirect('/request-product/')
+        
+        if str(file).split('.')[1] != "pdf":
+            messages.warning(request, "Only Pdf files are allowed")
+            return redirect('/request-product/')
+        
+
+        product = Product.objects.create(
+           product_name = product_name,
+            description = description,
+            quantity  = quantity,
+            file = file ,
+        )
+        messages.success(request, "Product created.")
+        return redirect('/request-product/')
+
+    return render(request, 'request.html')
 
 def dynamic_url(request,id, name):
     print(f"This is the value that we got in the func -> {id}")

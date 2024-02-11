@@ -8,12 +8,31 @@
     <p>Contact Page 📞📞📞.</p>
 
     <p>
-
         <a href="{% url 'index' %}"> Home </a> | 
-        <a href="{% url 'about'%}"> About </a>
-    
-      
+        <a href="{% url 'about'%}"> About </a>  
     </p>
+
+
+    <div class="col-6 mx-auto">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}    
+    
+            <button type="submit"> Submit</button>
+        </form>
+    
+    </div>
+  
+  
+
+    <style>
+        input{
+            border: none !important;
+        }
+        label {
+            font-weight: bold !important;
+        }
+    </style>
 
 
     {% endblock %}
