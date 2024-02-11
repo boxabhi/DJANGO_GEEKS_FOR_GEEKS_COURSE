@@ -97,14 +97,23 @@ class Product(BaseModel):
         db_table = "product_table"
 
 
+from django.db.models.signals import post_save , post_delete
+from django.dispatch import receiver
 
 class Contact(models.Model):
     name = models.CharField(max_length=100)
-    age = models.IntegerField()
-    gender = models.CharField(max_length=100, choices = (
-        ("Male" , "Male"),
-        ("Female", "Female")) , default="Male" )
-    phone_number = models.CharField(max_length = 10, null = True , blank = True)
-    comment = models.CharField(max_length=100000)
-    file = models.FileField(upload_to="files", null = True , blank=True)
+    contact_id = models.CharField(max_length = 100 , null=True , blank = True)
+
+
+@receiver(post_save , sender = Contact)
+def contact_obj_created(sender , instance, created , **kwargs):
+    print("CONTACT CREATED")
+    if created:
+        instance.contact_id = f"{(instance.name)}-{str(instance.id).zfill(5)}"
+        instance.save()
+
+
+@receiver(post_delete , sender = Contact)
+def contact_obj_deleted(sender , instance , **kwargs):
+    print("CONTACT DELETDD")
 

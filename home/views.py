@@ -8,6 +8,19 @@ from django.contrib import messages
 
 
 
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        Contact.objects.create(name = name)
+        return redirect("/contact/")
+    context = {'contacts' : Contact.objects.all()}
+    return render(request, 'contact.html', context)
+
+def delete_contact(request, id):
+    contact = Contact.objects.get(id = id)
+    contact.delete()
+    return redirect("/contact/")
+
 
 def index(request):
     lucky_number = random.randint(100 , 999)
@@ -28,18 +41,18 @@ def index(request):
 def about(request):
     return render(request, 'about.html')
 
-def contact(request):
+# def contact(request):
 
-    if request.method == "POST":
-        form = ContactForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/contact/')
+#     if request.method == "POST":
+#         form = ContactForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/contact/')
 
 
-    form = ContactForm()
-    context = {'form' : form}
-    return render(request, 'contact.html' , context)
+#     form = ContactForm()
+#     context = {'form' : form}
+#     return render(request, 'contact.html' , context)
 
 
 
