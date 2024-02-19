@@ -2,6 +2,8 @@ from collections.abc import Iterable
 from django.db import models
 from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
+from django.db.models.signals import post_save , post_delete
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -45,6 +47,8 @@ class Skills(BaseModel):
     created_at = models.DateTimeField(auto_now = True)
     update_at = models.DateTimeField(auto_now_add = True)
 
+    def __str__(self) -> str:
+        return self.skill_name
 
 class StudentManager(models.Manager):
     def get_queryset(self) -> QuerySet:
@@ -97,12 +101,14 @@ class Product(BaseModel):
         db_table = "product_table"
 
 
-from django.db.models.signals import post_save , post_delete
-from django.dispatch import receiver
+
 
 class Contact(models.Model):
     name = models.CharField(max_length=100)
     contact_id = models.CharField(max_length = 100 , null=True , blank = True)
+
+
+
 
 
 @receiver(post_save , sender = Contact)
@@ -116,4 +122,6 @@ def contact_obj_created(sender , instance, created , **kwargs):
 @receiver(post_delete , sender = Contact)
 def contact_obj_deleted(sender , instance , **kwargs):
     print("CONTACT DELETDD")
+
+
 

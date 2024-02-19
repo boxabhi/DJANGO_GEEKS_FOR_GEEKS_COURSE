@@ -4,60 +4,60 @@
 {% block start %}
 
 <div class="container p-4">
-{% include  "image.html" %}
 
 
+    <form>
+        <input placeholder="Search.." value="{{search}}" name="search">
+        <button type="submit">Search</button>
+    </form>
 
-    <h1>This HTML page is returned by Django. :) 😁</h1>
-    <p>Django is really nice. 🚀🚀</p>
 
-    <h2>Your Lucky number is - <button class="btn btn-danger">{{lucky_number}}</button></h2>
+   <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Age</th>
 
+      <th scope="col">Phone Number</th>
+      <th scope="col">DOB</th>
+      <th scope="col">Skills</th>
 
-    <ol>
-        {% for vegetable in vegetables  %}
-        <li>{{vegetable}}</li>
-        {% endfor %}
-    </ol>
+      <th scope="col">Total skills</th>
 
-    <hr>
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in students %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>{{student.name}}</td>
+      <td>{{student.age}}</td>
 
-    {% if person_age >= 18 %}
-    <h1>You can vote</h1>
-    {% else %}
-    <h1>You cannot vote.</h1>
+      <td>{{student.phone_number}}</td>
+      <td>{{student.date_of_birth}}</td>
+      <td>{% for skill in student.skills.all %} {{skill.skill_name}},{% endfor %}</td>
 
-    {% endif %}
+      <td>{{student.num_skills}}</td>
 
-    <h3>Cities Information</h3>
-
-    <p> S. no | Name | Population | Country </p>
-    {% for city in cities %}
-
-    <p> {{forloop.counter}} | {{city.name}} | {{city.population}}  | {{city.country}} 
-        
-        {% if city.country == "India" %}  
-        👏🏻
-        {% elif city.country == "Japan" %}
-        🎎
-        {% elif city.country == "USA" %}
-        🤑
-        {% else %}
-        ❌
-        {% endif %}
-    
-    </p>
-
+    </tr>
     {% endfor %}
 
+    
+  </tbody>
+  
+</table>
+
+
+<p>Age Sum : {{student_age_sum}}</p>
+<p>Age AVG : {{student_age_avg}}</p>
+<p>Age Max : {{student_age_max}}</p>
+<p>Age Min : {{student_age_min}}</p>
 
    
+   
 
-    <hr>
-    <a href="{% url 'contact'%}"> Contact </a> | 
-    <a href="{% url 'about'%}"> About </a>
-</p>
-
+  
 </div>
 
 {% endblock %}

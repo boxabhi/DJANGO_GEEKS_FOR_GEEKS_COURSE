@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "accounts"
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+# AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'new_db2',
+        'NAME': 'geeksforgeeks',
         'USER': 'root',
         'PASSWORD': '',
         'HOST':'localhost',

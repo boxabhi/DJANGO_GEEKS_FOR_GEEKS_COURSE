@@ -5,6 +5,36 @@ import random
 from home.forms import ContactForm
 from home.models import Contact, Product
 from django.contrib import messages
+from .models import Student
+from django.db.models import Sum, Avg, Min , Max, Count
+
+
+def annotateStudents(search):
+    students = Student.objects.annotate(num_skills = Count('skills')).filter(
+        num_skills__gte = 1
+        )
+    if search:
+        students = students.filter(name__icontains = search)
+    return students
+
+
+def index(request):
+    search = request.GET.get('search')
+    students = annotateStudents(search)
+    student_age_sum = students.aggregate(Sum('age'))
+    student_age_avg = students.aggregate(Avg('age'))
+    student_age_max = students.aggregate(Max('age'))
+    student_age_min= students.aggregate(Min('age'))
+
+
+    context = {"students" : students, 
+               'student_age_sum' : student_age_sum['age__sum'] ,
+               'student_age_avg' : student_age_avg['age__avg'],
+               'student_age_max' : student_age_max['age__max'],
+               'student_age_min'  : student_age_min['age__min'],
+               'search' : search
+               }
+    return render(request, 'index.html' , context)
 
 
 
@@ -22,20 +52,6 @@ def delete_contact(request, id):
     return redirect("/contact/")
 
 
-def index(request):
-    lucky_number = random.randint(100 , 999)
-    vegetables = ["Tomato 🍅" , "Potato 🥔" , "Chilly 🌶 ", "Carrot 🥕" , "Cucumber 🥒"]
-    person_age = 15
-    cities = [
-    {"name": "Mumbai", "population": "19,000,000", "country": "India"},
-    {"name": "New York", "population": "20,000,000", "country": "USA"},
-    {"name": "Calcutta", "population": "15,000,000", "country": "India"},
-    {"name": "Chicago", "population": "7,000,000", "country": "USA"},
-    {"name": "Tokyo", "population": "33,000,000", "country": "Japan"},
-]
-    
-    context = {"cities" : cities,"lucky_number" : lucky_number , "vegetables" : vegetables , "person_age" : person_age}
-    return render(request, 'index.html' , context)
 
 
 def about(request):
